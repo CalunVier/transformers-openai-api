@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  transformers-openai-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "7088:7088"
+    environment:
+      - HOSTNAME=0.0.0.0
+      - PORT=7088
+      - HF_MODEL=mesolitica/malaysian-llama2-7b-32k-instructions
+      - TORCH_DTYPE=bfloat16
+      - ACCELERATOR_TYPE=cuda
+      - MAX_CONCURRENT=10
+      - LOGLEVEL=INFO
+    volumes:
+      - ~/.cache/huggingface:/root/.cache/huggingface
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
