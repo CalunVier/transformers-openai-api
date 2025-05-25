@@ -1,8 +1,12 @@
 # Transformers OpenAI API
 
-[English](README.md) | [简体中文](README.zh-CN.md)
+[English](README.md) | [简体中文](README.ZH.md)
 
 本程序用为由 Transformers 运行的模型提供一个 OpenAI 兼容的 API 接口。使用 FastAPI 构建，支持流式和非流式响应，完全兼容 OpenAI Chat Completions API。
+
+## 为什么选择 Transformers 而不是 vLLM？
+
+在某些场景下，vLLM 的 KV Cache 功能不易关闭，可能导致显存占用过高，出现内存不足的问题。此时，使用 Transformers 运行模型并结合本项目提供的 OpenAI 兼容 API，可以更灵活地管理显存资源，满足不同部署需求。
 
 ## 功能特性
 

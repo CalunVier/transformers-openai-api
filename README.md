@@ -1,8 +1,12 @@
 # Transformers OpenAI API
 
-[English](README.md) | [简体中文](README.zh-CN.md)
+[English](README.md) | [简体中文](README_ZH.md)
 
 This project provides an OpenAI-compatible API interface for models running with Hugging Face Transformers. Built with FastAPI, it supports both streaming and non-streaming responses and is fully compatible with the OpenAI Chat Completions API.
+
+## Why Choose Transformers Instead of vLLM?
+
+In some scenarios, vLLM's KV Cache feature is not easy to disable, which may lead to excessive GPU memory usage and out-of-memory issues. In such cases, running models with Transformers and using this project's OpenAI-compatible API allows for more flexible memory management to meet different deployment needs.
 
 ## Features
 
@@ -235,8 +239,8 @@ transformers-openai-api/
 ├── requirements.txt     # Python dependencies
 ├── Dockerfile           # Docker config
 ├── docker-compose.yml   # Docker Compose config
-├── start.ps1            # Windows startup script
-└── README.md            # Project documentation
+├── start.ps1           # Windows startup script
+└── README.md           # Project documentation
 ```
 
 ## Troubleshooting
