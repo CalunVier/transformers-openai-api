@@ -1,53 +1,55 @@
 # Transformers OpenAI API
 
-本程序用为由 Transformers 运行的模型提供一个 OpenAI 兼容的 API 接口。使用 FastAPI 构建，支持流式和非流式响应，完全兼容 OpenAI Chat Completions API。
+[English](README.md) | [简体中文](README.zh-CN.md)
 
-## 功能特性
+This project provides an OpenAI-compatible API interface for models running with Hugging Face Transformers. Built with FastAPI, it supports both streaming and non-streaming responses and is fully compatible with the OpenAI Chat Completions API.
 
-- 🚀 OpenAI Chat Completions API 兼容
-- 📡 支持流式和非流式响应
-- 🔧 基于 Transformers 库的模型推理
-- ⚡ 支持 CUDA 加速和优化
-- 🎛️ 可配置的参数（温度、top_p、max_tokens 等）
-- 📊 支持批处理和并发限制
-- 🐳 Docker 支持
-- 🔍 健康检查和监控端点
+## Features
 
-## 快速开始
+- 🚀 OpenAI Chat Completions API compatible
+- 📡 Supports streaming and non-streaming responses
+- 🔧 Model inference based on the Transformers library
+- ⚡ CUDA acceleration and optimization
+- 🎛️ Configurable parameters (temperature, top_p, max_tokens, etc.)
+- 📊 Batch processing and concurrency limits
+- 🐳 Docker support
+- 🔍 Health check and monitoring endpoints
 
-### 方法 1: 使用 PowerShell 脚本（推荐）
+## Quick Start
+
+### Method 1: Using PowerShell Script (Recommended)
 
 ```powershell
-# 直接运行启动脚本
+# Run the startup script directly
 .\start.ps1
 ```
 
-### 方法 2: 手动安装
+### Method 2: Manual Installation
 
 ```bash
-# 1. 创建虚拟环境
+# 1. Create a virtual environment
 python -m venv venv
 
-# 2. 激活虚拟环境 (Windows)
+# 2. Activate the virtual environment (Windows)
 venv\Scripts\activate
 
-# 3. 安装依赖
+# 3. Install dependencies
 pip install -r requirements.txt
 
-# 4. 启动服务器
+# 4. Start the server
 python main.py
 ```
 
-### 方法 3: 使用 Docker
+### Method 3: Using Docker
 
 ```bash
-# 构建并运行
+# Build and run
 docker-compose up --build
 ```
 
-## API 使用示例
+## API Usage Examples
 
-### 基本聊天完成
+### Basic Chat Completion
 
 ```python
 import requests
@@ -68,7 +70,7 @@ response = requests.post(url, json=payload)
 print(response.json())
 ```
 
-### 流式响应
+### Streaming Response
 
 ```python
 import requests
@@ -101,7 +103,7 @@ for line in response.iter_lines():
                 continue
 ```
 
-### 获取可用模型
+### List Available Models
 
 ```python
 import requests
@@ -110,20 +112,20 @@ response = requests.get("http://localhost:7088/v1/models")
 print(response.json())
 ```
 
-## 测试客户端
+## Test Client
 
-运行包含的测试客户端：
+Run the included test client:
 
 ```bash
 python example_client.py
 ```
 
-## API 端点
+## API Endpoints
 
-- `GET /v1/models` - 列出可用模型
-- `POST /v1/chat/completions` - 创建聊天完成
-- `GET /health` - 健康检查
-- `GET /` - 根端点信息
+- `GET /v1/models` - List available models
+- `POST /v1/chat/completions` - Create chat completion
+- `GET /health` - Health check
+- `GET /` - Root endpoint info
 
 ```
 usage: main.py [-h] [--host HOST] [--port PORT] [--loglevel LOGLEVEL] [--model-type MODEL_TYPE]
@@ -183,32 +185,32 @@ options:
                         torch compile type (default: reduce-overhead, env: TORCH_COMPILE_MODE)
 ```
 
-## 配置参数
+## Configuration Parameters
 
-所有配置参数都可以通过命令行参数或环境变量设置：
+All configuration parameters can be set via command-line arguments or environment variables:
 
-### 基本配置
-- `--host` / `HOSTNAME`: 服务器主机 (默认: 0.0.0.0)
-- `--port` / `PORT`: 服务器端口 (默认: 7088)
-- `--loglevel` / `LOGLEVEL`: 日志级别 (默认: INFO)
+### Basic Configuration
+- `--host` / `HOSTNAME`: Server host (default: 0.0.0.0)
+- `--port` / `PORT`: Server port (default: 7088)
+- `--loglevel` / `LOGLEVEL`: Logging level (default: INFO)
 
-### 模型配置
-- `--hf-model` / `HF_MODEL`: Hugging Face 模型名称
-- `--model-type` / `MODEL_TYPE`: 模型类型 (默认: AutoModelForCausalLM)
-- `--tokenizer-type` / `TOKENIZER_TYPE`: 分词器类型 (默认: AutoTokenizer)
-- `--torch-dtype` / `TORCH_DTYPE`: 数据类型 (默认: bfloat16)
+### Model Configuration
+- `--hf-model` / `HF_MODEL`: Hugging Face model name
+- `--model-type` / `MODEL_TYPE`: Model type (default: AutoModelForCausalLM)
+- `--tokenizer-type` / `TOKENIZER_TYPE`: Tokenizer type (default: AutoTokenizer)
+- `--torch-dtype` / `TORCH_DTYPE`: Data type (default: bfloat16)
 
-### 性能优化
-- `--accelerator-type` / `ACCELERATOR_TYPE`: 加速器类型 (默认: cuda)
-- `--max-concurrent` / `MAX_CONCURRENT`: 最大并发请求数 (默认: 100)
-- `--torch-compile` / `TORCH_COMPILE`: 启用 Torch 编译优化
-- `--static-cache` / `STATIC_CACHE`: 预分配 KV 缓存
+### Performance Optimization
+- `--accelerator-type` / `ACCELERATOR_TYPE`: Accelerator type (default: cuda)
+- `--max-concurrent` / `MAX_CONCURRENT`: Maximum concurrent requests (default: 100)
+- `--torch-compile` / `TORCH_COMPILE`: Enable Torch compile optimization
+- `--static-cache` / `STATIC_CACHE`: Preallocate KV cache
 
-### 批处理配置
-- `--continuous-batching-batch-size`: 连续批处理的最大批次大小 (默认: 20)
-- `--continuous-batching-microsleep`: 批处理微睡眠时间 (默认: 0.001)
+### Batch Processing
+- `--continuous-batching-batch-size`: Maximum batch size for continuous batching (default: 20)
+- `--continuous-batching-microsleep`: Micro sleep time for batching (default: 0.001)
 
-### 示例启动命令
+### Example Startup Command
 
 ```bash
 python main.py \
@@ -220,64 +222,64 @@ python main.py \
     --torch-compile True
 ```
 
-## 项目结构
+## Project Structure
 
 ```
 transformers-openai-api/
-├── main.py              # 应用入口点
-├── app.py               # FastAPI 应用
-├── config.py            # 配置管理
-├── models.py            # Pydantic 数据模型
-├── model_manager.py     # 模型管理器
-├── example_client.py    # 测试客户端
-├── requirements.txt     # Python 依赖
-├── Dockerfile           # Docker 配置
-├── docker-compose.yml   # Docker Compose 配置
-├── start.ps1           # Windows 启动脚本
-└── README.md           # 项目文档
+├── main.py              # Application entry point
+├── app.py               # FastAPI app
+├── config.py            # Configuration management
+├── models.py            # Pydantic data models
+├── model_manager.py     # Model manager
+├── example_client.py    # Test client
+├── requirements.txt     # Python dependencies
+├── Dockerfile           # Docker config
+├── docker-compose.yml   # Docker Compose config
+├── start.ps1            # Windows startup script
+└── README.md            # Project documentation
 ```
 
-## 故障排除
+## Troubleshooting
 
-### 常见问题
+### Common Issues
 
-1. **CUDA 内存不足**
-   - 尝试使用较小的模型
-   - 设置 `--torch-dtype float16` 或 `--hqq True`
-   - 减少 `--max-concurrent` 值
+1. **CUDA Out of Memory**
+   - Try using a smaller model
+   - Set `--torch-dtype float16` or `--hqq True`
+   - Reduce the value of `--max-concurrent`
 
-2. **模型加载慢**
-   - 确保网络连接稳定
-   - 考虑使用本地模型路径
+2. **Slow Model Loading**
+   - Ensure a stable network connection
+   - Consider using a local model path
 
-3. **API 响应慢**
-   - 启用 `--torch-compile True`
-   - 使用 `--static-cache True`
-   - 调整 `--continuous-batching-batch-size`
+3. **Slow API Response**
+   - Enable `--torch-compile True`
+   - Use `--static-cache True`
+   - Adjust `--continuous-batching-batch-size`
 
-### 日志
+### Logging
 
-启用详细日志：
+Enable detailed logging:
 ```bash
 python main.py --loglevel DEBUG
 ```
 
-## 兼容性
+## Compatibility
 
-本 API 兼容 OpenAI Chat Completions API，可以直接替换 OpenAI 的端点使用。支持的参数：
+This API is compatible with the OpenAI Chat Completions API and can be used as a direct replacement for OpenAI endpoints. Supported parameters:
 
-- `model`: 模型名称
-- `messages`: 对话消息列表
-- `max_tokens`: 最大生成令牌数
-- `temperature`: 采样温度
-- `top_p`: Top-p 采样
-- `stream`: 是否流式响应
-- `stop`: 停止序列
+- `model`: Model name
+- `messages`: List of conversation messages
+- `max_tokens`: Maximum number of generated tokens
+- `temperature`: Sampling temperature
+- `top_p`: Top-p sampling
+- `stream`: Whether to use streaming response
+- `stop`: Stop sequences
 
-## 许可证
+## License
 
 MIT License
 
-## 贡献
+## Contributing
 
-欢迎提交 Issue 和 Pull Request！
+Contributions and pull requests are welcome!
