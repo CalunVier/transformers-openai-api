@@ -10,8 +10,6 @@ Test script for new features:
 import requests
 import json
 import time
-import asyncio
-from openai import OpenAI
 
 
 def test_debug_logging():

@@ -7,7 +7,7 @@ import logging
 from typing import AsyncGenerator
 import asyncio
 
-from models import (
+from transformers_openai.models import (
     ChatCompletionRequest,
     ChatCompletionResponse,
     ChatCompletionChoice,
@@ -19,8 +19,8 @@ from models import (
     ModelInfo,
     ErrorResponse
 )
-from model_manager import model_manager
-from config import config
+from transformers_openai.model_manager import model_manager
+from transformers_openai.config import config
 
 # Configure logging
 logging.basicConfig(level=getattr(logging, config.args.loglevel.upper()))

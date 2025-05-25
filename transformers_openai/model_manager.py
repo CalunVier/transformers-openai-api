@@ -4,7 +4,6 @@ import re
 from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
-    AutoProcessor,
     StaticCache,
     TextIteratorStreamer,
 )
@@ -12,7 +11,7 @@ from typing import Optional, List, Dict, Any, AsyncGenerator, Tuple
 import asyncio
 import time
 from threading import Thread
-from config import config
+from transformers_openai.config import config
 
 
 logger = logging.getLogger(__name__)

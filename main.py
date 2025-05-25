@@ -7,7 +7,7 @@ Transformers OpenAI API
 
 import uvicorn
 import logging
-from config import config
+from transformers_openai.config import config
 
 
 def main():
@@ -29,7 +29,7 @@ def main():
     
     # Start the server
     uvicorn.run(
-        "app:app",
+        "transformers_openai.app:app",
         host=config.args.host,
         port=config.args.port,
         log_level=config.args.loglevel.lower(),

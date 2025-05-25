@@ -4,7 +4,6 @@
 """
 import json
 import requests
-import time
 from openai import OpenAI
 
 def test_with_curl():

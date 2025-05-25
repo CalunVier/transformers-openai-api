@@ -1,6 +1,5 @@
 import argparse
 import os
-from typing import Literal
 
 
 class Config:

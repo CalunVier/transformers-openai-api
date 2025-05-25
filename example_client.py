@@ -5,7 +5,6 @@ Example client for testing the Transformers OpenAI API
 
 import requests
 import json
-import time
 
 
 def test_chat_completion(base_url="http://localhost:7088", stream=False):

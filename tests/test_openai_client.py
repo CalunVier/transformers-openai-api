@@ -2,8 +2,6 @@
 """
 OpenAI API 兼容性测试客户端
 """
-import json
-import time
 from openai import OpenAI
 
 def test_with_openai_client():

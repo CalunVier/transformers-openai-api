@@ -5,7 +5,6 @@ Quick test script to validate the 4 key features without hanging
 
 import requests
 import json
-import time
 
 def test_features():
     """Test all 4 features quickly"""

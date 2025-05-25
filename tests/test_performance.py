@@ -4,7 +4,6 @@
 """
 import time
 import requests
-import json
 from openai import OpenAI
 
 def test_streaming_performance():

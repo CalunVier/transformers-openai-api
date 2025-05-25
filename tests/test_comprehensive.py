@@ -2,9 +2,7 @@
 """
 全面的 API 性能和功能测试
 """
-import asyncio
 import time
-import json
 from concurrent.futures import ThreadPoolExecutor
 import requests
 from openai import OpenAI
