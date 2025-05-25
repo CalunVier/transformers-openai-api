@@ -144,6 +144,13 @@ class Config:
             default=os.getenv("TORCH_COMPILE_MODE", "reduce-overhead"),
             help="torch compile type (default: reduce-overhead, env: TORCH_COMPILE_MODE)"
         )
+        self.parser.add_argument(
+            "--reasoning-parser", 
+            type=str, 
+            choices=["none", "deepseek_r1"],
+            default=os.getenv("REASONING_PARSER", "none"),
+            help="Reasoning parser type to extract thinking content (default: none, env: REASONING_PARSER)"
+        )
 
 
 config = Config()

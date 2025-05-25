@@ -86,18 +86,28 @@ async def list_models() -> ModelListResponse:
 async def create_chat_completion(request: ChatCompletionRequest):
     """Create a chat completion"""
     try:
+        # DEBUG level logging - print incoming request
+        if logger.isEnabledFor(logging.DEBUG):
+            logger.debug("=== Incoming Chat Completion Request ===")
+            logger.debug(f"Request data: {request.model_dump_json(indent=2)}")
+            logger.debug("=" * 45)
+        
         await request_limiter.acquire()
+        
+        # DEBUG level logging for incoming requests
+        if logger.isEnabledFor(logging.DEBUG):
+            logger.debug(f"Incoming request: {request.model_dump_json()}")
         
         # Validate model
         if request.model != model_manager.model_name:
             raise HTTPException(
                 status_code=400, 
-                detail=f"Model {request.model} not found. Available: {model_manager.model_name}"        )
+                detail=f"Model {request.model} not found. Available: {model_manager.model_name}"
+            )
         
         # Format prompt
         prompt = model_manager.format_chat_prompt([msg.model_dump() for msg in request.messages])
-        
-        # Prepare generation parameters
+          # Prepare generation parameters
         max_tokens = request.max_tokens or 100
         temperature = request.temperature or 1.0
         top_p = request.top_p or 1.0
@@ -127,6 +137,10 @@ async def create_chat_completion(request: ChatCompletionRequest):
                         if chunk.get("text"):
                             delta["content"] = chunk["text"]
                         
+                        # Add reasoning content if available
+                        if chunk.get("reasoning_content"):
+                            delta["reasoning_content"] = chunk["reasoning_content"]
+                        
                         # Create choice
                         choice = ChatCompletionStreamChoice(
                             index=0,
@@ -134,12 +148,23 @@ async def create_chat_completion(request: ChatCompletionRequest):
                             finish_reason=chunk.get("finish_reason")
                         )
                         
-                        # Create stream response
+                        # Create stream response with usage info
                         stream_response = ChatCompletionStreamResponse(
                             id=completion_id,
                             model=request.model,
                             choices=[choice]
                         )
+                        
+                        # Add usage information if available
+                        if chunk.get("finish_reason"):
+                            stream_response.usage = ChatCompletionUsage(
+                                prompt_tokens=chunk.get("prompt_tokens", 0),
+                                completion_tokens=chunk.get("completion_tokens", 0),
+                                total_tokens=chunk.get("total_tokens", 0),
+                                time_to_first_token=chunk.get("time_to_first_token"),
+                                total_time=chunk.get("total_time"),
+                                tokens_per_second=chunk.get("tokens_per_second")
+                            )
                         
                         # Send the chunk
                         data = stream_response.model_dump_json()
@@ -148,8 +173,7 @@ async def create_chat_completion(request: ChatCompletionRequest):
                         # Break if finished
                         if chunk.get("finish_reason"):
                             break
-                    
-                    # Send final done message
+                      # Send final done message
                     yield "data: [DONE]\n\n"
                 
                 except Exception as e:
@@ -158,7 +182,8 @@ async def create_chat_completion(request: ChatCompletionRequest):
                     error_response = {
                         "error": {
                             "message": str(e),
-                            "type": "server_error"                        }
+                            "type": "server_error"
+                        }
                     }
                     yield f"data: {json.dumps(error_response)}\n\n"
                     yield "data: [DONE]\n\n"
@@ -189,20 +214,29 @@ async def create_chat_completion(request: ChatCompletionRequest):
                 
                 completion_id = f"chatcmpl-{uuid.uuid4().hex}"
                 
+                # Create message with reasoning content if available
+                message = ChatMessage(
+                    role="assistant", 
+                    content=result["text"],
+                    reasoning_content=result.get("reasoning_content")
+                )
+                
                 response = ChatCompletionResponse(
                     id=completion_id,
                     model=request.model,
                     choices=[
                         ChatCompletionChoice(
                             index=0,
-                            message=ChatMessage(role="assistant", content=result["text"]),
+                            message=message,
                             finish_reason="stop"
                         )
                     ],                    
                     usage=ChatCompletionUsage(
                         prompt_tokens=result["prompt_tokens"],
                         completion_tokens=result["completion_tokens"],
-                        total_tokens=result["total_tokens"]
+                        total_tokens=result["total_tokens"],
+                        total_time=result.get("total_time"),
+                        tokens_per_second=result.get("tokens_per_second")
                     )                
                 )
                 

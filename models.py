@@ -6,6 +6,7 @@ import time
 class ChatMessage(BaseModel):
     role: str = Field(..., description="The role of the message author")
     content: str = Field(..., description="The content of the message")
+    reasoning_content: Optional[str] = Field(None, description="Extracted reasoning/thinking content")
 
 
 class ChatCompletionRequest(BaseModel):
@@ -31,6 +32,10 @@ class ChatCompletionUsage(BaseModel):
     prompt_tokens: int = Field(..., description="Number of tokens in the prompt")
     completion_tokens: int = Field(..., description="Number of tokens in the generated completion")
     total_tokens: int = Field(..., description="Total number of tokens used in the request")
+    # Enhanced timing and speed information
+    time_to_first_token: Optional[float] = Field(None, description="Time to first token in seconds")
+    total_time: Optional[float] = Field(None, description="Total generation time in seconds")
+    tokens_per_second: Optional[float] = Field(None, description="Generation speed in tokens per second")
 
 
 class ChatCompletionResponse(BaseModel):
@@ -54,6 +59,7 @@ class ChatCompletionStreamResponse(BaseModel):
     created: int = Field(default_factory=lambda: int(time.time()), description="The Unix timestamp of when the chat completion was created")
     model: str = Field(..., description="The model used for the chat completion")
     choices: List[ChatCompletionStreamChoice] = Field(..., description="A list of chat completion choices")
+    usage: Optional[ChatCompletionUsage] = Field(None, description="Usage statistics for the completion request")
 
 
 class ModelInfo(BaseModel):
