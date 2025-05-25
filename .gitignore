@@ -90,3 +90,5 @@ Desktop.ini
 # Transformers cache
 .cache/
 transformers_cache/
+
+api-doc/
